@@ -5,8 +5,8 @@
 		<script>
 			var screenWidth = window.screen.width;
 			var screenHeight = window.screen.height;
-			var timer = null;
-			var oldValue = 0;
+			var FrameDelay = 1;
+			var counter = 0;
 			var frameOffset = 0;
 			var frames = null;
 			var destHandle = null;
@@ -59,30 +59,20 @@
 				elementHandle.width = screenWidth;
 				elementHandle.height = screenHeight;
 				drawFrame();
-				changeTimer();
 				document.getElementById("speed").value = 0;
 			}
 			function drawFrame() {
 				destHandle.drawImage(frames[frameOffset | 0], 0, 0);
-				frameOffset = (((frameOffset | 0) + 1) % 3) | 0;
-				if (oldValue == 0) {
-					window.requestAnimationFrame(drawFrame);
+				counter = ((counter | 0) + 1) | 0;
+				if ((counter | 0) == (FrameDelay | 0)) {
+					frameOffset = (((frameOffset | 0) + 1) % 3) | 0;
+					counter = 0;
 				}
+				window.requestAnimationFrame(drawFrame);
 			}
-			function changeTimer(newValue) {
-				if (oldValue == 0) {
-					window.cancelAnimationFrame(timer);
-				}
-				else if (timer) {
-					window.clearInterval(timer);
-				}
-				oldValue = newValue | 0;
-				if (oldValue == 0) {
-					timer = window.requestAnimationFrame(drawFrame);
-				}
-				else {
-					timer = setInterval(drawFrame, 2 << oldValue);
-				}
+			function updateCounter(newValue) {
+				FrameDelay = 1 << newValue;
+				counter = 0;
 			}
 		</script>
 		<style>
@@ -103,5 +93,5 @@
 			}
 		</style>
 	</head>
-	<body onload="screenfuzz();"><input type="range" id="speed" onchange="changeTimer(this.value);" min="0" max="10" step="1" value="0"><canvas id="_0" class="hiddenBuffers"></canvas><canvas id="_1" class="hiddenBuffers"></canvas><canvas id="_2" class="hiddenBuffers"></canvas><canvas id="destination"></canvas></body>
+	<body onload="screenfuzz();"><input type="range" id="speed" min="0" max="10" step="1" value="0" onchange="updateCounter(this.value);"><canvas id="_0" class="hiddenBuffers"></canvas><canvas id="_1" class="hiddenBuffers"></canvas><canvas id="_2" class="hiddenBuffers"></canvas><canvas id="destination"></canvas></body>
 </html>
