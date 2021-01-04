@@ -3,8 +3,8 @@
 	<head>
 		<title>ScreenFuzz</title>
 		<script>
-			var screenWidth = window.screen.width;
-			var screenHeight = window.screen.height;
+			var screenWidth = window.screen.width >>> 0;
+			var screenHeight = window.screen.height >>> 0;
 			var FrameDelay = 1;
 			var counter = 0;
 			var frameOffset = 0;
@@ -14,9 +14,9 @@
 				elementId = elementId | 0;
 				var elementHandle = document.getElementById("_" + elementId);
 				var contextHandle = elementHandle.getContext("2d");
-				elementHandle.width = screenWidth;
-				elementHandle.height = screenHeight;
-				var imageBuffer = contextHandle.getImageData(0, 0, screenWidth, screenHeight);
+				elementHandle.width = screenWidth >>> 0;
+				elementHandle.height = screenHeight >>> 0;
+				var imageBuffer = contextHandle.getImageData(0, 0, screenWidth >>> 0, screenHeight >>> 0);
 				var data = imageBuffer.data;
 				var frameLength = data.length | 0;
 				var z = elementId;
@@ -24,7 +24,7 @@
 				var z = elementId | 0;
 				while ((xx | 0) < (frameLength | 0)) {
 					var zz = z | 0;
-					for (var x = 0; (x | 0) < (screenWidth | 0); x = ((x | 0) + 1) | 0) {
+					for (var x = 0; (x | 0) < (screenWidth >>> 0); x = ((x | 0) + 1) | 0) {
 						switch (zz | 0) {
 							case 0:
 								data[xx | 0] = 0xFF;
@@ -54,12 +54,12 @@
 			}
 			function screenfuzz() {
 				frames = [generateFrame(0), generateFrame(1), generateFrame(2)];
+				document.getElementById("speed").value = 0;
 				elementHandle = document.getElementById("destination");
 				destHandle = elementHandle.getContext("2d");
-				elementHandle.width = screenWidth;
-				elementHandle.height = screenHeight;
+				elementHandle.width = screenWidth >>> 0;
+				elementHandle.height = screenHeight >>> 0;
 				drawFrame();
-				document.getElementById("speed").value = 0;
 			}
 			function drawFrame() {
 				destHandle.drawImage(frames[frameOffset | 0], 0, 0);
@@ -71,16 +71,22 @@
 				window.requestAnimationFrame(drawFrame);
 			}
 			function updateCounter(newValue) {
-				FrameDelay = 1 << newValue;
+				newValue = newValue >>> 0;
+				FrameDelay = 1 << (newValue >>> 0);
 				counter = 0;
 			}
 		</script>
 		<style>
-			body, html, canvas {
+			html, body {
+				overflow: hidden;
 				margin: 0px;
 				padding: 0px;
 				width: 100%;
 				height: 100%;
+			}
+			canvas {
+				margin: 0px;
+				padding: 0px;
 				overflow: hidden;
 				cursor: none;
 			}
@@ -94,5 +100,5 @@
 			}
 		</style>
 	</head>
-	<body onload="screenfuzz();"><input type="range" id="speed" min="0" max="10" step="1" value="0" onchange="updateCounter(this.value);"><canvas id="_0" class="hiddenBuffers"></canvas><canvas id="_1" class="hiddenBuffers"></canvas><canvas id="_2" class="hiddenBuffers"></canvas><canvas id="destination"></canvas></body>
+	<body onload="screenfuzz();"><input type="range" id="speed" min="0" max="10" step="1" value="0" onchange="updateCounter(this.value >>> 0);"><canvas id="_0" class="hiddenBuffers"></canvas><canvas id="_1" class="hiddenBuffers"></canvas><canvas id="_2" class="hiddenBuffers"></canvas><canvas id="destination"></canvas></body>
 </html>
