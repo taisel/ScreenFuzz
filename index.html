@@ -10,6 +10,24 @@
 			var frameOffset = 0;
 			var frames = null;
 			var destHandle = null;
+			var DelayLUT = [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				16,
+				32,
+				64,
+				128,
+				256,
+				512,
+				1024,
+				2048
+			];
 			function generateFrame(elementId) {
 				elementId = elementId | 0;
 				var elementHandle = document.getElementById("_" + elementId);
@@ -72,7 +90,7 @@
 			}
 			function updateCounter(newValue) {
 				newValue = newValue >>> 0;
-				FrameDelay = 1 << (newValue >>> 0);
+				FrameDelay = DelayLUT[newValue >>> 0] >>> 0;
 				counter = 0;
 			}
 		</script>
@@ -100,5 +118,5 @@
 			}
 		</style>
 	</head>
-	<body onload="screenfuzz();"><input type="range" id="speed" min="0" max="10" step="1" value="0" onchange="updateCounter(this.value >>> 0);"><canvas id="_0" class="hiddenBuffers"></canvas><canvas id="_1" class="hiddenBuffers"></canvas><canvas id="_2" class="hiddenBuffers"></canvas><canvas id="destination"></canvas></body>
+	<body onload="screenfuzz();"><input type="range" id="speed" min="0" max="15" step="1" value="0" onchange="updateCounter(this.value >>> 0);"><canvas id="_0" class="hiddenBuffers"></canvas><canvas id="_1" class="hiddenBuffers"></canvas><canvas id="_2" class="hiddenBuffers"></canvas><canvas id="destination"></canvas></body>
 </html>
